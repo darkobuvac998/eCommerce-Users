@@ -12,17 +12,13 @@ namespace eCommerce.Users.Application.Handlers;
 
 public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginResponse>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IMapper _mapper;
 
-    public LoginCommandHandler(
-        IUserRepository userRepository,
-        IJwtProvider jwtProvider,
-        IMapper mapper
-    )
+    public LoginCommandHandler(IUnitOfWork unitOfWork, IJwtProvider jwtProvider, IMapper mapper)
     {
-        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _mapper = mapper;
     }
@@ -43,8 +39,9 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
         {
             user =
                 (
-                    await _userRepository
+                    await _unitOfWork.Users
                         .GetByUsername(request.Username)
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(cancellationToken)
                 ) ?? throw new ItemNotFoundException(typeof(User), request.Username);
         }
@@ -52,8 +49,9 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
         {
             user =
                 (
-                    await _userRepository
+                    await _unitOfWork.Users
                         .GetByEmail(request.Email!)
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(cancellationToken)
                 ) ?? throw new ItemNotFoundException(typeof(User), request.Email!);
         }

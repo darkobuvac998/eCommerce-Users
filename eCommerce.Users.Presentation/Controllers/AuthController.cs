@@ -19,4 +19,11 @@ public class AuthController : ApiController
         var result = await Sender.Send(command);
         return Ok(result);
     }
+
+    [HttpGet("permissions")]
+    public async Task<IActionResult> GetAllPermissionsAsync()
+    {
+        var result = await Sender.Send(new GetAllAvailablePermissionsCommand());
+        return Ok(result);
+    }
 }

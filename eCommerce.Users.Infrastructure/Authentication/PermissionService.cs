@@ -22,6 +22,7 @@ public sealed class PermissionService : IPermissionService
             .Where(u => u.Id == userId)
             .SelectMany(u => u.Roles)
             .SelectMany(u => u.Permissions)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         var permissionNames = new List<string>();

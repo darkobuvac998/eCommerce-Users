@@ -15,7 +15,7 @@ public sealed class InfrastructureServiceInstaller : IServiceInstaller
         var provider = services.BuildServiceProvider();
         var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddDbContext<UsersDbContext>(
             options =>
