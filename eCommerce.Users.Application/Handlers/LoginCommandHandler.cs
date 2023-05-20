@@ -15,12 +15,19 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IMapper _mapper;
+    private readonly IPasswordService _passwordService;
 
-    public LoginCommandHandler(IUnitOfWork unitOfWork, IJwtProvider jwtProvider, IMapper mapper)
+    public LoginCommandHandler(
+        IUnitOfWork unitOfWork,
+        IJwtProvider jwtProvider,
+        IMapper mapper,
+        IPasswordService passwordService
+    )
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _mapper = mapper;
+        _passwordService = passwordService;
     }
 
     public async Task<LoginResponse> Handle(
@@ -54,6 +61,17 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
                         .AsNoTracking()
                         .FirstOrDefaultAsync(cancellationToken)
                 ) ?? throw new ItemNotFoundException(typeof(User), request.Email!);
+        }
+
+        var isPasswordValid = _passwordService.VerifyPassword(
+            request.Password,
+            user.Password,
+            user.Salt
+        );
+
+        if (!isPasswordValid)
+        {
+            throw new UserFriendlyException("Incorrect password");
         }
 
         var tokenResult = await _jwtProvider.GenerateTokenAsync(user, cancellationToken);

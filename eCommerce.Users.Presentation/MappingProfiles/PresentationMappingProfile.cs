@@ -9,5 +9,6 @@ public sealed class PresentationMappingProfile : Profile
     public PresentationMappingProfile()
     {
         CreateMap<LoginRequest, LoginCommand>();
+        CreateMap<SignInRequest, SignInCommand>();
     }
 }

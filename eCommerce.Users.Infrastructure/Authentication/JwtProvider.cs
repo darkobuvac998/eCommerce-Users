@@ -13,11 +13,17 @@ public sealed class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _jwtOptions;
     private readonly IPermissionService _permissionService;
+    private readonly ICacheService _cacheService;
 
-    public JwtProvider(IOptions<JwtOptions> jwtOptions, IPermissionService permissionService)
+    public JwtProvider(
+        IOptions<JwtOptions> jwtOptions,
+        IPermissionService permissionService,
+        ICacheService cacheService
+    )
     {
         _jwtOptions = jwtOptions.Value;
         _permissionService = permissionService;
+        _cacheService = cacheService;
     }
 
     public async Task<JwtResult> GenerateTokenAsync(User user, CancellationToken cancellationToken)
@@ -34,16 +40,24 @@ public sealed class JwtProvider : IJwtProvider
             cancellationToken
         );
 
-        foreach (var permission in permissions)
-        {
-            claims.Add(new(CustomClaims.Permissions, permission));
-        }
+        //foreach (var permission in permissions)
+        //{
+        //    claims.Add(new(CustomClaims.Permissions, permission));
+        //}
+
+        var cacheKey = $"user-{user.Id}";
+        await _cacheService.SetAsync(
+            cacheKey,
+            permissions,
+            TimeSpan.FromDays(_jwtOptions.ExpirationTime),
+            cancellationToken
+        );
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var validFrom = DateTime.UtcNow;
-        var validTo = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationTime);
+        var validTo = DateTime.UtcNow.AddDays(_jwtOptions.ExpirationTime);
 
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,

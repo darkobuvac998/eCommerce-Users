@@ -6,4 +6,5 @@ public interface IUserRepository : IRepository<User>
 {
     IQueryable<User> GetByUsername(string username);
     IQueryable<User> GetByEmail(string email);
+    Task<User> CreateUserAsync(User user, CancellationToken cancellationToken = default);
 }

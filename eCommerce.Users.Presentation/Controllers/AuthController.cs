@@ -20,10 +20,11 @@ public class AuthController : ApiController
         return Ok(result);
     }
 
-    [HttpGet("permissions")]
-    public async Task<IActionResult> GetAllPermissionsAsync()
+    [HttpPost("signin")]
+    public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
     {
-        var result = await Sender.Send(new GetAllAvailablePermissionsCommand());
+        var command = Mapper.Map<SignInCommand>(request);
+        var result = await Sender.Send(command);
         return Ok(result);
     }
 }

@@ -13,6 +13,15 @@ public sealed class UserRepository : IUserRepository
 
     public DbSet<User> Entity => _usersDbContext.Set<User>();
 
+    public async Task<User> CreateUserAsync(
+        User user,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await _usersDbContext.Users.AddAsync(user, cancellationToken);
+        return user;
+    }
+
     public IQueryable<User> GetByEmail(string email)
     {
         return _usersDbContext.Users.Where(u => u.Email == email);
