@@ -45,6 +45,7 @@ public sealed class InfrastructureServiceInstaller : IServiceInstaller
 
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ICacheService, CacheService>();
         services.AddScoped<IPasswordService, PasswordService>();
     }

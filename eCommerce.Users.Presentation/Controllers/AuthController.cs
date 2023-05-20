@@ -2,10 +2,12 @@
 using eCommerce.Users.Application.Commands;
 using eCommerce.Users.Presentation.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce.Users.Presentation.Controllers;
 
+[AllowAnonymous]
 [Route("/api/[controller]")]
 public class AuthController : ApiController
 {
@@ -20,6 +22,7 @@ public class AuthController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost("signin")]
     public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
     {

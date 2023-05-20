@@ -14,16 +14,19 @@ public sealed class JwtProvider : IJwtProvider
     private readonly JwtOptions _jwtOptions;
     private readonly IPermissionService _permissionService;
     private readonly ICacheService _cacheService;
+    private readonly IRoleService _roleService;
 
     public JwtProvider(
         IOptions<JwtOptions> jwtOptions,
         IPermissionService permissionService,
-        ICacheService cacheService
+        ICacheService cacheService,
+        IRoleService roleService
     )
     {
         _jwtOptions = jwtOptions.Value;
         _permissionService = permissionService;
         _cacheService = cacheService;
+        _roleService = roleService;
     }
 
     public async Task<JwtResult> GenerateTokenAsync(User user, CancellationToken cancellationToken)
@@ -35,6 +38,13 @@ public sealed class JwtProvider : IJwtProvider
             new(JwtRegisteredClaimNames.Name, user.Username),
         };
 
+        List<string> roles = await _roleService.GetUserRolesAsync(user.Id, cancellationToken);
+
+        foreach (var role in roles)
+        {
+            claims.Add(new(CustomClaims.Roles, role));
+        }
+
         HashSet<string> permissions = await _permissionService.GetPermissionsAsync(
             user.Id,
             cancellationToken
@@ -45,7 +55,7 @@ public sealed class JwtProvider : IJwtProvider
         //    claims.Add(new(CustomClaims.Permissions, permission));
         //}
 
-        var cacheKey = $"user-{user.Id}";
+        var cacheKey = $"user[permissions]-{user.Id}";
         await _cacheService.SetAsync(
             cacheKey,
             permissions,
