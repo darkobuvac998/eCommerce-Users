@@ -1,4 +1,4 @@
-﻿using eCommerce.Users.Infrastructure.Authentication;
+﻿using eCommerce.Users.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

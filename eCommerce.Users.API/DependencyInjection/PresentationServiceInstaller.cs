@@ -33,5 +33,7 @@ public sealed class PresentationServiceInstaller : IServiceInstaller
         {
             conf.DescribeAllParametersInCamelCase();
         });
+
+        services.AddAuthorization();
     }
 }

@@ -1,4 +1,4 @@
-﻿using eCommerce.Users.Infrastructure.Authentication;
+﻿using eCommerce.Users.Infrastructure.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 

@@ -1,6 +1,7 @@
 ﻿using eCommerce.Users.Application.Abstractions;
 using eCommerce.Users.Application.Response;
 using eCommerce.Users.Domain.Entities;
+using eCommerce.Users.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

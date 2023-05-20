@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace eCommerce.Users.Infrastructure.Authentication;
+namespace eCommerce.Users.Infrastructure.Options;
 
 public class JwtOptions
 {

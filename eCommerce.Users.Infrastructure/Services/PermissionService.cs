@@ -2,7 +2,7 @@
 using eCommerce.Users.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace eCommerce.Users.Infrastructure.Authentication;
+namespace eCommerce.Users.Infrastructure.Services;
 
 public sealed class PermissionService : IPermissionService
 {
