@@ -13,7 +13,8 @@ public sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
             new Role { Id = 2, Name = "Techincal", },
             new Role { Id = 3, Name = "CustomerBasic", },
             new Role { Id = 4, Name = "CustomerGold", },
-            new Role { Id = 5, Name = "CustomerPremium", }
+            new Role { Id = 5, Name = "CustomerPremium", },
+            new Role { Id = 6, Name = "SuperAdmin", }
         );
     }
 }

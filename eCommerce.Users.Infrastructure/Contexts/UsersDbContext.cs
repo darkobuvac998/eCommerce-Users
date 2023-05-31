@@ -1,10 +1,11 @@
-﻿using eCommerce.Users.Domain.Entities;
+﻿using eCommerce.Users.Domain.Contracts;
+using eCommerce.Users.Domain.Entities;
 using eCommerce.Users.Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace eCommerce.Users.Infrastructure.Contexts;
 
-public sealed class UsersDbContext : DbContext
+public sealed class UsersDbContext : DbContext, IUsersDbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }

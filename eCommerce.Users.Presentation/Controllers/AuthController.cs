@@ -22,7 +22,6 @@ public class AuthController : ApiController
         return Ok(result);
     }
 
-    [AllowAnonymous]
     [HttpPost("signin")]
     public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
     {

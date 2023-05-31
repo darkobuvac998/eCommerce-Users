@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eCommerce.Users.Application.Commands;
+using eCommerce.Users.Infrastructure.Authorization;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce.Users.Presentation.Controllers;
@@ -12,7 +12,7 @@ public class PermissionsController : ApiController
     public PermissionsController(ISender sender, IMapper mapper)
         : base(sender, mapper) { }
 
-    [Authorize(Roles = "Admin")]
+    [HasPermission(Permissions.Permission.View)]
     [HttpGet]
     public async Task<IActionResult> GetAllPermissionsAsync()
     {

@@ -1,10 +1,12 @@
 ﻿using eCommerce.Users.Application.Abstractions;
 using eCommerce.Users.Domain.Contracts;
 using eCommerce.Users.Infrastructure.Authentication;
+using eCommerce.Users.Infrastructure.Authorization;
 using eCommerce.Users.Infrastructure.Contexts;
 using eCommerce.Users.Infrastructure.OptionsSetup;
 using eCommerce.Users.Infrastructure.Repositories;
 using eCommerce.Users.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace eCommerce.Users.API.DependencyInjection;
@@ -34,6 +36,10 @@ public sealed class InfrastructureServiceInstaller : IServiceInstaller
                     .UseLoggerFactory(loggerFactory)
         );
 
+        services.AddScoped<IUsersDbContext>(
+            provider => provider.GetRequiredService<UsersDbContext>()
+        );
+
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
         services.ConfigureOptions<RedisOptionsSetup>();
@@ -48,5 +54,11 @@ public sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ICacheService, CacheService>();
         services.AddScoped<IPasswordService, PasswordService>();
+
+        services.AddSingleton<IAuthorizationHandler, PolicyAuthorizationHandler>();
+        services.AddSingleton<
+            IAuthorizationPolicyProvider,
+            PermissionAuthorizationPolicyProvider
+        >();
     }
 }
